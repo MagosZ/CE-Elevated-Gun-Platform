@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ModMetaData>
+	<name>CE Elevated Gun Platform</name>
+	<author>MagosZ</author>
+	<packageId>you.ce.elevatedgunplatform</packageId>
+	<supportedVersions>
+		<li>1.6</li>
+		<li>1.7</li>
+	</supportedVersions>
+	<description>Combat Extended add-on. Build a turret platform and put a CE turret on it. The pair becomes an elevated turret that fires from a real height, over the walls near it.
+
+THE PLATFORM
+- A wall-like building in the Security tab (research: gun turrets), made from any wall material, in two kinds:
+  - Low platform: floor 1 by default. Cost: 5 material per cell plus 1 component.
+  - High platform: floor 3 by default. Costs double and takes twice as long to build, and adds more hit points to the turret.
+- One size per turret footprint (1×1, 2×2, 3×3 ...), each with a high and a low platform button side by side, high first; clicking one lets you choose the material. With the Material Sub-Menu mod, each size gets one button with the low platform in its dropdown. A platform can be rotated, and the marked spot in front is where colonists stand to man or reload the turret.
+- Impassable, holds up roofs, and airtight if its material is. It is as tall as its height (see HEIGHT); the art shows a thin front face on the low platform and a tall one on the high platform. Beauty -10, whatever the material.
+- It can't be packed up. Deconstructing it refunds material like a wall; the component is never refunded.
+
+MOUNTING
+- Build or install a CE turret exactly over a finished platform (low or high) of the same size. A partial overlap, a different size or an unfinished platform is refused, with the reason.
+- The turret's own manning/loading spot can't be on a platform.
+- Mortars and other indirect-fire turrets can't be mounted. Every other buildable CE turret can.
+- Turret and platform become one building with one hit point pool: the turret's hit points plus 20% of them on a low platform, 40% on a high one, scaled by the platform material's hit point factor.
+- The platform's autoloader doubles the turret's ammo capacity. CE autoloaders still feed it.
+- The elevated turret is impassable, airtight if the material is, holds up roofs, and burns like the more flammable of turret and wall. Its value is the turret's plus the platform's. Its beauty is -10, whatever the turret, material or quality.
+
+UNMOUNTING
+- Packing up (uninstall or reinstall) or deconstructing the turret gives the same platform back with its hit points.
+- When packed up, rounds above the turret's own capacity are dropped next to it. Deconstructing drops the whole magazine, as CE does.
+- If the elevated turret is destroyed, the platform is left at half its hit points.
+
+HEIGHT
+- Platform heights are set in floors, counted G (ground), 1, 2, ... Each floor is a wall's height (2.0). Defaults: low platform floor 1 (2.0), high platform floor 3 (6.0). Range for each: floor 1 (2.0) to floor 10 (20.0).
+- The elevated turret's top and muzzle are its own height plus its platform's height. Example: CE autocannon 0.85 + 2.0 = 2.85 on a low platform, 0.85 + 6.0 = 6.85 on a high one.
+- For comparison (CE units, 1.0 = 1.75 m): walls are 2.0, and a standing human is 1.0 and fires from 0.85. A built roof is a thin slab just above wall height, a thin rock roof reaches 4.0 and an overhead mountain 8.0.
+
+LINE OF FIRE (rounds fly in 3D)
+- Fires over walls and cover near the turret. Walls and cover near the target still hide whatever is below their top.
+- A roof over the target hides it. No shot passes through any roof, the player's own included.
+- A turret under a roof fires only where its shot stays above the roof slab. A built roof is always below the muzzle. A thin rock roof blocks a turret on a low platform but is below one on a high platform; an overhead mountain blocks both at the default floors.
+- Only rock roofs (thin rock roof, overhead mountain) reach above a built roof's thin slab. Every other roof is a built roof's thin slab wherever CE checks a round or a line against a roof, for every shooter. That includes thick built roofs from other mods such as Raise The Roof's constructed steel roof, which CE would make as thick as thin rock (setting, on by default). What else a roof does, such as stopping drop pods and mortar shells, comes from its own definition and doesn't change.
+- The aim is raised just enough to clear walls and roof slabs on the way, never above the target.
+- Friendly fire: a manned elevated turret holds fire only if the shot would really pass through a friendly.
+- Firing arcs (CE setting): on a platform a turret can turn its arc to any direction; the arc's width limit stays.
+- Range, smoke and light work as in CE.
+
+ROUNDS
+- Rounds fired by an elevated turret are normal CE rounds that start higher. A miss flies on and lands where it falls.
+- They hit roofs as in CE (never through them), and never hit pawns standing under a roof.
+- Shell fragments are normal CE fragments.
+- Rounds aimed at an elevated turret are normal CE rounds: enemies can see it and shoot it.
+- Suppression: rounds fired by an elevated turret suppress pawns along their path like any round, at any height, but not pawns under a roof that the round passes over.
+
+SPOTTING AND TARGETING
+- Sight to and from an elevated turret uses the same 3D test (pawns don't block sight), so it sees what it can shoot and is seen the same way.
+- It chooses targets without CE's flat cover penalty, since its line check already counts cover by height.
+- Interception (CE's CIWS) of drop pods, shuttles and rounds in the air is left to CE: this mod's 3D rules don't judge lines or sight to targets in the air. As in CE, a turret on Hold fire doesn't intercept either.
+
+ORDERS AND DISPLAY
+- Every elevated turret of yours can be ordered to attack a target, manned or not. Guns that can aim at the ground (such as CE's flak) can also be ordered onto a spot. A manned one still needs its crew to fire. CE's range and firing arc limits apply. The order is forgotten when the turret is packed up, mounted or moved to another map. An automatic CIWS turret (one without crew) with an order still intercepts: each time it picks its next target, a drop pod, shuttle or round that CE's interception finds inside its firing arc comes before the order, and it goes back to the order afterwards. An attack on the order already under way (aiming, burst, cooldown) is finished first, so a pod falling in meanwhile can land untargeted. On the ground such a turret can't take orders at all.
+- Each elevated turret of yours has a button, "Show firing zone against human-sized target" (off by default). While it is on and the turret is selected, a blue outline inside CE's range ring shows where it can hit a standing human, by the same rule it fires by and within the range of the loaded ammo. Walls hide the ground right behind them, and roofed ground is left out. Other pawns, plants, smoke and light aren't counted. The outline appears a moment after selecting (longer for long-range turrets) and then follows changes about once a second.
+
+SETTINGS (Mod settings, CE Elevated Gun Platform)
+Height of the high and low platforms (floor 3 and floor 1), hit points they add (40% and 20%), ammo capacity (x2), whether non-rock roofs are as thin as a built roof for rounds and lines of fire (on), material per cell (5) and components (1) of a low platform (a high one costs double), and a debug overlay for dev mode. The two cost settings take effect after a restart; the others apply at once.
+
+COMPATIBILITY
+RimWorld 1.6 and 1.7. Requires Harmony and Combat Extended; load after both. Works with Replace Stuff, which can't replace an elevated turret in place. Thick built roofs from other mods, such as Raise The Roof's, are as thin as built roofs where rounds and lines meet them; drop pods and mortar shells still treat them as thick.</description>
+	<modDependencies>
+		<li>
+			<packageId>brrainz.harmony</packageId>
+			<displayName>Harmony</displayName>
+			<steamWorkshopUrl>steam://url/CommunityFilePage/2009463077</steamWorkshopUrl>
+		</li>
+		<li>
+			<packageId>CETeam.CombatExtended</packageId>
+			<displayName>Combat Extended</displayName>
+			<steamWorkshopUrl>steam://url/CommunityFilePage/2890901044</steamWorkshopUrl>
+		</li>
+	</modDependencies>
+	<loadAfter>
+		<li>brrainz.harmony</li>
+		<li>CETeam.CombatExtended</li>
+	</loadAfter>
+</ModMetaData>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+
+	<!-- Defs -->
+	<EGP_ElevatedLabel>elevated {0}</EGP_ElevatedLabel>
+	<EGP_ElevatedDescriptionSuffix>This turret stands on a turret platform. It fires from the platform's height (by default floor 1 on a low platform, floor 3 on a high one) plus its own height, so it shoots over walls near it. Walls near the target still give cover, a roof over the target hides it, and enemies can see and shoot it just as well. It can be ordered to attack a target even if nobody mans it (a spot on the ground too, if its gun can aim at the ground, such as flak); a manned one still needs its crew to fire. The platform adds hit points (more on a high platform), multiplies the ammo capacity (x2 by default) and makes the turret impassable. Packing up or deconstructing the turret gives the platform back.</EGP_ElevatedDescriptionSuffix>
+	<EGP_PlatformLabelHigh>high turret platform ({0}×{1})</EGP_PlatformLabelHigh>
+	<EGP_PlatformLabelLow>low turret platform ({0}×{1})</EGP_PlatformLabelLow>
+	<EGP_PlatformGroupLabel>turret platform ({0}×{1})</EGP_PlatformGroupLabel>
+	<EGP_PlatformDescriptionHigh>A tall, solid platform for a {0}×{1} turret: floor 3 by default, set in the mod settings (each floor is a wall's height). Build or install a Combat Extended turret of exactly this size on it to make an elevated gun emplacement that fires over nearby walls. Compared with the low platform it costs twice as much and takes twice as long to build, and it adds more hit points to the turret (+40% by default). Mortars and other indirect-fire turrets can't be mounted. Holds up roofs like a wall, and is airtight if its material is. The marked spot in front is where colonists stand to man or reload the turret.</EGP_PlatformDescriptionHigh>
+	<EGP_PlatformDescriptionLow>A low, solid platform for a {0}×{1} turret: floor 1 by default, a wall's height, set in the mod settings. Build or install a Combat Extended turret of exactly this size on it to make an elevated gun emplacement that fires over nearby walls. It costs half as much as the high platform and is quicker to build, and it adds fewer hit points to the turret (+20% by default). Mortars and other indirect-fire turrets can't be mounted. Holds up roofs like a wall, and is airtight if its material is. The marked spot in front is where colonists stand to man or reload the turret.</EGP_PlatformDescriptionLow>
+
+	<!-- Placement -->
+	<EGP_NeedsPlatform>This turret takes up {0}×{1} cells. To mount it, place it exactly over one finished {0}×{1} turret platform (high or low).</EGP_NeedsPlatform>
+	<EGP_PlatformUnfinished>The turret platform here isn't finished yet. Finish building the platform first, then place the turret on it.</EGP_PlatformUnfinished>
+	<EGP_InteractionSpotOnPlatform>The spot where colonists stand to man or reload this would be on a turret platform, which can't be walked on. Turn or move it so that spot is on open ground.</EGP_InteractionSpotOnPlatform>
+
+	<!-- Inspect panel and button -->
+	<EGP_InspectPlatform>Platform: {0}</EGP_InspectPlatform>
+	<EGP_InspectHeight>Firing height: {0} (platform on floor {1})</EGP_InspectHeight>
+	<EGP_InspectUnreachable>No colonist can reach this turret's loading spot.</EGP_InspectUnreachable>
+	<EGP_ShowFiringZone>Show firing zone against human-sized target</EGP_ShowFiringZone>
+	<EGP_ShowFiringZone_Desc>While this is on and the turret is selected, a blue outline inside its range ring shows where it can hit a standing human, by the same rule it fires by and within the range of the loaded ammo. Walls, closed doors and other solid buildings hide the ground right behind them; roofed ground is left out; rock overhead that reaches above the muzzle blocks it. Other pawns, plants, smoke and light are not counted. It appears a moment after selecting the turret and follows changes about once a second.</EGP_ShowFiringZone_Desc>
+
+	<!-- Stat explanations -->
+	<EGP_StatExplain_MaxHitPoints>Elevated on {0}: {1} x (1 + {2} x {3}) = {4}</EGP_StatExplain_MaxHitPoints>
+	<EGP_StatExplain_Flammability>Elevated on {0}: higher of turret ({1}) and platform wall ({2}) = {3}</EGP_StatExplain_Flammability>
+	<EGP_StatExplain_MarketValue>Elevated on {0}: turret {1} + platform {2} = {3}</EGP_StatExplain_MarketValue>
+	<EGP_StatExplain_Magazine>Turret platform autoloader: x{0}</EGP_StatExplain_Magazine>
+	<EGP_StatExplain_Beauty>Elevated turret or turret platform: {0}, whatever the turret, material or quality</EGP_StatExplain_Beauty>
+
+	<!-- Settings -->
+	<EGP_SettingsCategory>CE Elevated Gun Platform</EGP_SettingsCategory>
+	<EGP_Setting_HighFloor>High platform height: floor {0} ({1} above the ground)</EGP_Setting_HighFloor>
+	<EGP_Setting_LowFloor>Low platform height: floor {0} ({1} above the ground)</EGP_Setting_LowFloor>
+	<EGP_Setting_Floor_Tip>Floors are counted G (ground), 1, 2, ..., and each floor is a wall's height (2.0), so floor 1 is the top of a wall. A turret on a platform fires from this height plus its own height. A higher turret fires over more walls and over roofs below its muzzle, and enemies see it over more walls too. Turrets already on platforms change at once.</EGP_Setting_Floor_Tip>
+	<EGP_Setting_HpBonusHigh>Hit points added by a high platform: {0} of the turret's (scaled by material)</EGP_Setting_HpBonusHigh>
+	<EGP_Setting_HpBonusLow>Hit points added by a low platform: {0} of the turret's (scaled by material)</EGP_Setting_HpBonusLow>
+	<EGP_Setting_HpBonus_Tip>An elevated turret has the turret's hit points times (1 + this x the platform material's hit point factor). Wood adds less, plasteel more.</EGP_Setting_HpBonus_Tip>
+	<EGP_Setting_AmmoMultiplier>Ammo capacity on a platform: x{0}</EGP_Setting_AmmoMultiplier>
+	<EGP_Setting_AmmoMultiplier_Tip>The platform's autoloader multiplies the turret's magazine size. Rounds above the turret's own capacity are dropped when it leaves the platform.</EGP_Setting_AmmoMultiplier_Tip>
+	<EGP_Setting_PlainRoofs>Non-rock roofs are as thin as a built roof for rounds and lines of fire</EGP_Setting_PlainRoofs>
+	<EGP_Setting_PlainRoofs_Tip>On: every roof that isn't rock (thin rock roof, overhead mountain) is as thin as a plain built roof (2.0 to 2.1) wherever CE checks a round or a line against a roof, for every shooter, and in elevated turrets' line of fire, sight, aim and firing zone. This includes thick built roofs from other mods, such as Raise The Roof's constructed steel roof. Off: CE's thickness, where a thick built roof reaches 4.0 like a thin rock roof. What else a roof does, such as stopping drop pods and mortar shells, comes from its own definition either way. Applies at once.</EGP_Setting_PlainRoofs_Tip>
+	<EGP_Setting_RestartNote>The two settings below set a low platform's cost; a high platform costs double. They take effect after restarting the game.</EGP_Setting_RestartNote>
+	<EGP_Setting_StuffPerCell>Material per low platform cell</EGP_Setting_StuffPerCell>
+	<EGP_Setting_Components>Components per low platform (never refunded)</EGP_Setting_Components>
+	<EGP_Setting_Debug>Debug overlay (dev mode only)</EGP_Setting_Debug>
+	<EGP_Setting_Debug_Tip>Flashes the cells an elevated turret checks when it looks for or fires at a target: 0 = blocked, 0.7 = clear, with the line's height. Also logs, for every CIWS turret on the ground or elevated, each incoming drop pod or shuttle on the map, which ones it targets, and each one that lands untargeted with the turret's state (hold fire, power, ammo, orders), and logs every power conduit that is destroyed, with the code path that destroyed it, and vanilla's wipe decision when a platform or elevated turret spawns over a conduit.</EGP_Setting_Debug_Tip>
+
+</LanguageData>

@@ -1,0 +1,18 @@
+# Build intermediates
+Source/obj/
+Source/bin/
+
+# Compiled output (rebuild with: dotnet build Source/ElevatedGunPlatform.csproj -c Release)
+Assemblies/*.dll
+*.pdb
+
+# Memory notes live in the Mods root and are not versioned
+Claude_memory.md
+
+# IDE
+.vs/
+*.user
+
+# Made by RimWorld: the Workshop item id (written on upload) and the baked texture cache
+About/PublishedFileId.txt
+Assets.zip*

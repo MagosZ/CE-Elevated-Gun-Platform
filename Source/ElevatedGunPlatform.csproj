@@ -1,0 +1,51 @@
+<Project Sdk="Microsoft.NET.Sdk">
+	<!-- One net48 DLL for RimWorld 1.6 and 1.7, built like Combat Extended itself (net48 against the 1.6 reference
+	     assemblies). RimWorld 1.7 runs it through its Unity redirects, as it runs CE. A net10.0 build is not possible:
+	     CE's API uses UnityEngine.CoreModule types, which the 1.7 reference assemblies replace with UnityStubs.
+
+	     Release build:  dotnet build ElevatedGunPlatform.csproj -c Release
+	     1.7 API check:  dotnet build ElevatedGunPlatform.csproj -c Release -p:RW=1.7
+	                     (net10.0 against the 1.7 reference assemblies; compiles everything except Combat/, whose CE
+	                     calls carry Unity types; output stays in obj/ and is not shipped) -->
+	<PropertyGroup>
+		<TargetFramework Condition="'$(RW)' == '1.6'">net48</TargetFramework>
+		<TargetFramework Condition="'$(RW)' == '1.7'">net10.0</TargetFramework>
+		<RWREF Condition="'$(RW)' == '1.6'">1.6.4871</RWREF>
+		<RWREF Condition="'$(RW)' == '1.7'">1.7.4984-unstable</RWREF>
+		<LangVersion>latest</LangVersion>
+		<Nullable>disable</Nullable>
+		<ImplicitUsings>disable</ImplicitUsings>
+		<AssemblyName>ElevatedGunPlatform</AssemblyName>
+		<RootNamespace>ElevatedGunPlatform</RootNamespace>
+		<OutputPath Condition="'$(RW)' == '1.6'">..\Assemblies\</OutputPath>
+		<OutputPath Condition="'$(RW)' == '1.7'">obj\check17\out\</OutputPath>
+		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+		<GenerateDependencyFile>false</GenerateDependencyFile>
+		<CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>
+		<DebugType>none</DebugType>
+		<!-- Both builds keep intermediates under obj/<RW>/; never compile the other build's generated files -->
+		<DefaultItemExcludes>$(DefaultItemExcludes);obj/**;bin/**</DefaultItemExcludes>
+		<!-- Point this at your installed Combat Extended folder -->
+		<CEDir>C:\Games\Steam\steamapps\workshop\content\294100\2890901044</CEDir>
+	</PropertyGroup>
+
+	<ItemGroup Condition="'$(RW)' == '1.7'">
+		<Compile Remove="Combat/**" />
+	</ItemGroup>
+	<!-- ApiCheck17/ repeats Combat/'s vanilla calls for the 1.7 check; it is never part of the shipped DLL -->
+	<ItemGroup Condition="'$(RW)' != '1.7'">
+		<Compile Remove="ApiCheck17/**" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Krafs.Rimworld.Ref" Version="$(RWREF)" />
+		<PackageReference Include="Lib.Harmony" Version="2.4.3" ExcludeAssets="runtime" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Reference Include="CombatExtended">
+			<HintPath>$(CEDir)\Assemblies\CombatExtended.dll</HintPath>
+			<Private>false</Private>
+		</Reference>
+	</ItemGroup>
+</Project>

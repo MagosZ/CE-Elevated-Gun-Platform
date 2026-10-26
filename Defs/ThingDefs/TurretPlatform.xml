@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Defs>
+
+  <!-- The 1x1 high turret platform. At load the mod adjusts it from the settings and clones it for the 1x1 low
+       platform and for every other footprint size used by an eligible turret (EGP_TurretPlatform_{x}x{z}Cells,
+       EGP_TurretPlatformLow_{x}x{z}Cells), with one Architect dropdown per size. Texture, cost, work, label and
+       description are set in code (Source/Defs/DefGeneration.cs). -->
+  <ThingDef ParentName="BuildingBase">
+    <defName>EGP_TurretPlatform</defName>
+    <label>high turret platform (1×1)</label>
+    <description>A tall, solid platform for a 1×1 turret: floor 3 by default, set in the mod settings (each floor is a wall's height). Build or install a Combat Extended turret of exactly this size on it to make an elevated gun emplacement that fires over nearby walls. Compared with the low platform it costs twice as much and takes twice as long to build, and it adds more hit points to the turret (+40% by default). Mortars and other indirect-fire turrets can't be mounted. Holds up roofs like a wall, and is airtight if its material is. The marked spot in front is where colonists stand to man or reload the turret.</description>
+    <thingClass>Building</thingClass>
+    <category>Building</category>
+    <graphicData>
+      <texPath>EGP/Platform/High_1x1</texPath>
+      <graphicClass>Graphic_Single</graphicClass>
+      <drawSize>(1,1)</drawSize>
+      <drawRotated>false</drawRotated>
+    </graphicData>
+    <statBases>
+      <MaxHitPoints>300</MaxHitPoints>
+      <WorkToBuild>135</WorkToBuild>
+      <Flammability>1.0</Flammability>
+    </statBases>
+    <costStuffCount>5</costStuffCount>
+    <costList>
+      <ComponentIndustrial>1</ComponentIndustrial>
+    </costList>
+    <stuffCategories>
+      <li>Metallic</li>
+      <li>Woody</li>
+      <li>Stony</li>
+    </stuffCategories>
+    <leaveResourcesWhenKilled>false</leaveResourcesWhenKilled>
+    <altitudeLayer>Building</altitudeLayer>
+    <passability>Impassable</passability>
+    <blockWind>true</blockWind>
+    <blockLight>true</blockLight>
+    <castEdgeShadows>true</castEdgeShadows>
+    <fillPercent>1</fillPercent>
+    <coversFloor>true</coversFloor>
+    <holdsRoof>true</holdsRoof>
+    <staticSunShadowHeight>1.0</staticSunShadowHeight>
+    <tickerType>Never</tickerType>
+    <rotatable>true</rotatable>
+    <selectable>true</selectable>
+    <canOverlapZones>false</canOverlapZones>
+    <terrainAffordanceNeeded>Heavy</terrainAffordanceNeeded>
+    <hasInteractionCell>true</hasInteractionCell>
+    <interactionCellOffset>(0,0,-1)</interactionCellOffset>
+    <designationCategory>Security</designationCategory>
+    <researchPrerequisites>
+      <li>GunTurrets</li>
+    </researchPrerequisites>
+    <building>
+      <isInert>true</isInert>
+      <ai_chillDestination>false</ai_chillDestination>
+      <isStuffableAirtight>true</isStuffableAirtight>
+    </building>
+    <placeWorkers>
+      <li>PlaceWorker_PreventInteractionSpotOverlap</li>
+    </placeWorkers>
+  </ThingDef>
+
+</Defs>

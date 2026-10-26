@@ -1,0 +1,8 @@
+CE Elevated Gun Platform
+
+This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International
+License (CC BY-NC-SA 4.0). Full license text: https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode
+
+It is an add-on for Combat Extended (https://github.com/CombatExtended-Continued/CombatExtended), which
+is licensed under CC BY-NC-SA 4.0. Source/Combat/LineOfFire.cs adapts Combat Extended's
+Verb_LaunchProjectileCE.CanHitCellFromCellIgnoringRange; the changes are listed at the top of that file.
