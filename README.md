@@ -1,5 +1,7 @@
 # CE Elevated Gun Platform
 
+[![License: CC BY-NC-SA 4.0](https://img.shields.io/badge/License-CC%20BY--NC--SA%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc-sa/4.0/)
+
 A Combat Extended add-on for RimWorld 1.6 and 1.7. You build a **turret platform**, a solid tower, and put a CE turret on it. The pair becomes an **elevated turret**, called **E** in this file and in DESIGN.md. E fires from the platform's height plus its own height, so it shoots over walls near it. There are two platforms: a **low** one (floor 1 by default) and a **high** one (floor 3 by default) that costs double and adds more hit points. Heights are set in floors, each as tall as a wall, from floor 1 to floor 10. All other combat effects come from the real heights: walls near the target still give cover, a roof hides whoever is under it, and enemies can see and shoot E just as well as E can see and shoot them.
 
 The design spec is in `DESIGN.md`. The in-game test checklist and the list of assumptions still to check are in `TESTING.md`.
