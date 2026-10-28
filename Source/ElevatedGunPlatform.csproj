@@ -18,7 +18,7 @@
 		<AssemblyName>ElevatedGunPlatform</AssemblyName>
 		<RootNamespace>ElevatedGunPlatform</RootNamespace>
 		<OutputPath Condition="'$(RW)' == '1.6'">..\Assemblies\</OutputPath>
-		<OutputPath Condition="'$(RW)' == '1.7'">obj\check17\out\</OutputPath>
+		<OutputPath Condition="'$(RW)' == '1.7'">$(BaseIntermediateOutputPath)check17\out\</OutputPath>
 		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
 		<GenerateDependencyFile>false</GenerateDependencyFile>
 		<CopyLocalLockFileAssemblies>false</CopyLocalLockFileAssemblies>

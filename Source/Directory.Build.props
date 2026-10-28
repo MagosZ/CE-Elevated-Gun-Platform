@@ -1,7 +1,14 @@
 <Project>
+	<!-- Machine-wide settings from a Directory.Build.props above the mod folder, if there is one (the author's machine
+	     sets LocalGitBuildRoot there to keep build caches out of the mod folder). -->
+	<PropertyGroup>
+		<ParentBuildProps>$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)..'))</ParentBuildProps>
+	</PropertyGroup>
+	<Import Project="$(ParentBuildProps)" Condition="'$(ParentBuildProps)' != ''" />
 	<!-- RW=1.6 (default): the shipped net48 build. RW=1.7: API check against the 1.7 reference assemblies. -->
 	<PropertyGroup>
 		<RW Condition="'$(RW)' == ''">1.6</RW>
-		<BaseIntermediateOutputPath>obj\$(RW)\</BaseIntermediateOutputPath>
+		<BaseIntermediateOutputPath Condition="'$(LocalGitBuildRoot)' != ''">$(LocalGitBuildRoot)$(MSBuildProjectName)\obj\$(RW)\</BaseIntermediateOutputPath>
+		<BaseIntermediateOutputPath Condition="'$(LocalGitBuildRoot)' == ''">obj\$(RW)\</BaseIntermediateOutputPath>
 	</PropertyGroup>
 </Project>

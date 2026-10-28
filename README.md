@@ -147,7 +147,7 @@ dotnet build Source/ElevatedGunPlatform.csproj -c Release            (the shippe
 dotnet build Source/ElevatedGunPlatform.csproj -c Release -p:RW=1.7  (1.7 API check only)
 ```
 
-The first command writes `Assemblies/ElevatedGunPlatform.dll`, which is the only file to ship. The second compiles everything except `Source/Combat/` (plus `Source/ApiCheck17/`, which repeats the combat code's vanilla calls) as net10.0 against the 1.7 reference assemblies, and writes its output under `Source/obj/` only. Run the two builds one after the other, not in parallel.
+The first command writes `Assemblies/ElevatedGunPlatform.dll`, which is the only file to ship. The second compiles everything except `Source/Combat/` (plus `Source/ApiCheck17/`, which repeats the combat code's vanilla calls) as net10.0 against the 1.7 reference assemblies, and writes its output under the intermediate folder only (`Source/obj/`, or wherever a `Directory.Build.props` above the mod sets `LocalGitBuildRoot`). Run the two builds one after the other, not in parallel.
 
 ## License
 
