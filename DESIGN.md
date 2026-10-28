@@ -9,8 +9,8 @@ is a wall's height. Everything else follows from real heights.
 Terms: **E** = elevated turret; **base turret** = the normal CE turret def it came from; **platform** = the platform
 building; **record** = what E remembers about its platform (kept on E itself, saved with it).
 
-Evidence for vanilla and CE behaviour comes from open-source code only: CE source (`Mods/_CE_Source_Reference`),
-Replace Stuff and Harmony source (`Mods/_Mod_Source_Reference`), vanilla XML, and compile checks against the
+Evidence for vanilla and CE behaviour comes from open-source code only: CE source (`Model mods/_CE_Source_Reference`, next to `Mods`),
+Replace Stuff and Harmony source (`Model mods/_Mod_Source_Reference`), vanilla XML, and compile checks against the
 Krafs reference assemblies for 1.6.4871 and 1.7.4984. Where vanilla internals are unknown, the code is written to be
 correct either way, and the assumption is listed in TESTING.md.
 
