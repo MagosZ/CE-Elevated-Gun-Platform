@@ -20,10 +20,16 @@ THE PLATFORM
 MOUNTING
 - Build or install a CE turret exactly over a finished platform (low or high) of the same size. A partial overlap, a different size or an unfinished platform is refused, with the reason.
 - The turret's own manning/loading spot can't be on a platform.
-- Mortars and other indirect-fire turrets can't be mounted. Every other buildable CE turret can.
+- Every buildable CE turret can be mounted, mortars and other indirect-fire turrets (such as the rocket swarm launcher) included; see MORTARS.
 - Turret and platform become one building with one hit point pool: the turret's hit points plus 20% of them on a low platform, 40% on a high one, scaled by the platform material's hit point factor.
 - The platform's autoloader doubles the turret's ammo capacity. CE autoloaders still feed it.
-- The elevated turret is impassable, airtight if the material is, holds up roofs, and burns like the more flammable of turret and wall. Its value is the turret's plus the platform's. Its beauty is -10, whatever the turret, material or quality.
+- The elevated turret is impassable (a mortar excepted, see MORTARS), airtight if the material is, holds up roofs, and burns like the more flammable of turret and wall. Its value is the turret's plus the platform's. Its beauty is -10, whatever the turret, material or quality.
+
+MORTARS
+- A mortar or other indirect-fire turret on a platform sits on top of the roof the platform holds up. A built roof over it, the player's own included, doesn't stop it firing; a rock roof (thin rock roof, overhead mountain) does, as on the ground. The same rule decides where it can be placed: on a platform under a built roof, yes; under rock, no.
+- Colonists walk through it as through the mounted turret itself (a CE mortar: they pass through but can't stop there, at a mortar's walking cost). An empty platform stays impassable.
+- Its shells start from the platform top, and enemies see and shoot it as any elevated turret.
+- It keeps the platform's hit point bonus and doubled ammo capacity. It has no firing zone button, since it needs no line of fire.
 
 UNMOUNTING
 - Packing up (uninstall or reinstall) or deconstructing the turret gives the same platform back with its hit points.

@@ -23,7 +23,7 @@ Each item is a setup and the result it should give. **E** is an elevated turret.
 
 ### 1.1 Load and platform defs
 - [ ] **Clean start on 1.6, then on 1.7.** Expected: the generation log line and the eligibility list appear. There are no errors and no "Failed to apply patch class" lines. There is no config error "ends with a numerical digit" for any `EGP_` def; generated platforms are named `EGP_TurretPlatform_2x2Cells` (high), `EGP_TurretPlatformLow_2x2Cells` (low) and so on; the 1x1 high one is `EGP_TurretPlatform`, the 1x1 low one `EGP_TurretPlatformLow_1x1Cells`. No warning that Combat Extended lacks a Workshop URL.
-- [ ] **Eligibility list.** Expected: CE's mini-turret, autocannon, M240B and flak are under "can be mounted"; the mortar and rocketswarm launcher under "indirect fire"; the vanilla foam turret under "not a Combat Extended turret".
+- [ ] **Eligibility list.** Expected: CE's mini-turret, autocannon, M240B, flak, mortar and rocketswarm launcher are under "can be mounted"; the vanilla foam turret under "not a Combat Extended turret". No line says a mortar "follows the mortar rules" (that would mean the generation check missed it, see B3).
 - [ ] **Architect menu.** Open Architect > Security before and after researching Gun turrets. Expected: only after the research, "high turret platform (1×1)" and "low turret platform (1×1)" side by side, then the same for (2×2) and (3×3). Clicking either opens the material menu (metal, wood, stone), and the chosen material is built. The log says that the platforms get separate buttons. No "elevated ..." entry appears in any menu.
 - [ ] **With Material Sub-Menu.** Activate the Material Sub-Menu mod and restart. Expected: one button per size, "turret platform (1×1)" and so on, showing the high platform, with the low one in its dropdown; both can be built in any wall material.
 - [ ] **Costs and stats** (defaults 5 material per cell, 1 component). Expected:
@@ -51,7 +51,7 @@ Each item is a setup and the result it should give. **E** is an elevated turret.
 - [ ] A turret blueprint on a platform that is still a blueprint or frame is rejected with "The turret platform here isn't finished yet...".
 - [ ] A manned 1×1 turret (for example CE's M240B) placed on a 1×1 platform, turned so its loading spot faces a second platform, is rejected with "The spot where colonists stand to man or reload this would be on a turret platform...". Turned to face open ground, it is accepted. The same message appears for a manned turret placed next to a platform with its spot on it.
 - [ ] A wall, sandbags or another non-turret building over a platform is rejected because the space is occupied.
-- [ ] A mortar or rocketswarm launcher over a platform is rejected. These turrets are never mountable.
+- [ ] A mortar placed exactly on a finished platform is accepted, also under a built roof. Under thin rock roof or overhead mountain it is rejected with vanilla's "must be placed unroofed" message. Off a platform it keeps vanilla's rule: rejected under any roof.
 - [ ] **Frame on a platform.** Place a turret frame on a platform with no materials delivered yet. Expected: the platform stays and the frame draws on top. Nobody deconstructs the platform. A wall blueprint over that frame is rejected. When the frame is finished, the result is E.
 - [ ] **Install from a crate.** A minified mini-turret installed on a platform becomes E. An install blueprint over a platform is accepted only on an exact match. The platform is absorbed, not deconstructed first: no platform material drops, and a roof that only the platform holds stays up.
 
@@ -78,6 +78,16 @@ Each item is a setup and the result it should give. **E** is an elevated turret.
 - [ ] **Airtight (Odyssey).** Use an airtight material and make E part of a vacuum-sealed room's wall. Expected: the room stays sealed.
 - [ ] **Reload and manning.** A colonist reloads E from the loading spot. A manned turret's operator, for example CE's M240B, stands on that spot.
 - [ ] **Reach warning.** Wall off the loading spot. Expected: within about 4 seconds of game time the inspect panel shows the red line "No colonist can reach this turret's loading spot." It disappears once the spot is reachable again. Enemy or neutral E never shows it.
+
+### 1.3a Mortars on platforms (DESIGN 1.4)
+- [ ] **Mount.** A CE mortar and a rocketswarm launcher each built on a matching platform become "elevated mortar" and "elevated rocketswarm launcher", with the platform's hit point bonus and doubled ammo capacity.
+- [ ] **Walking.** Colonists path through the elevated mortar but never stop on it, more slowly than over open ground (path cost 50, as a mortar). An empty platform beside it stays impassable. An elevated mini-turret stays impassable.
+- [ ] **Holds the roof.** Roof the area over the elevated mortar, then remove every other support. Expected: the roof stays up.
+- [ ] **Fires from under a built roof.** With a built roof over it (and over a Raise The Roof steel roof, if installed), an attack order on a distant enemy: the Attack button is enabled, the inspect panel has no "Cannot fire: roofed", and the shells fly out and land. The ground mortar next to it under the same roof can't fire, as in CE.
+- [ ] **Rock stops it.** An elevated mortar on a platform under thin rock roof or overhead mountain (reinstall it there, or build the mountain roof over it in dev mode): "Cannot fire: roofed", the Attack button is greyed out, and it doesn't fire.
+- [ ] **Height and being hit.** Its shells start from the platform top (dev mode: the shell's first position is above the turret), and enemies shoot at it as at any elevated turret.
+- [ ] **No firing zone.** It has no "Show firing zone" button and draws no outline.
+- [ ] **Unmount.** Packing it up and deconstructing it give back the platform, as for any turret. The roof the platform holds stays.
 
 ### 1.4 Mini-turret made of stuff
 - [ ] **Mount.** Build a **plasteel** mini-turret on a **granite** high platform (and repeat on a low one). Expected:
@@ -234,7 +244,7 @@ The numbers in this phase were worked out for a muzzle of 2.85. **Use low platfo
 - [ ] **Rounds aimed at E.** Expected: they suppress colonists near E exactly as plain CE does.
 
 ### 2.9 Unchanged things
-- [ ] **Mortars.** Mortars and their shells behave as in CE; mortars can't be mounted.
+- [ ] **Mortars on the ground.** Mortars and their shells off a platform behave as in CE, including not firing under any roof.
 - [ ] **No E on the map.** A firefight on a map without E behaves exactly as with CE alone.
 - [ ] **Performance.** A large firefight, 40 or more pawns and several turrets, with no E on the map. Expected: no noticeable TPS drop compared with the mod disabled. Then add several E. Expected: no large drop.
 
@@ -359,8 +369,14 @@ The code relies on these points about vanilla RimWorld, and in a few cases about
   - Check: platforms can be built. The dev spawn list has no blueprint, frame or install blueprint named after an `EGP_Elevated_` def.
   - If wrong: platforms can't be built, or elevated defs become buildable directly.
 - **B3. The check that stands in for `building.IsMortar` matches vanilla's IsMortar for vanilla and CE turrets.** IsMortar is not called before ResolveReferences. Instead the code checks the verb's isMortar, Verb_ShootMortarCE, flyOverhead, and whether the gun has CompChangeableProjectile.
-  - Check: no "is a mortar (building.IsMortar) but was made mountable" warning at startup. The mortar and the rocketswarm launcher can't be mounted.
-  - If wrong: a mortar-like turret becomes mountable; the warning names it.
+  - Check: no "is a mortar (building.IsMortar); its elevated version follows the mortar rules" message at startup. The mortar and the rocketswarm launcher get the mortar rules (walkable) at generation.
+  - If wrong: the check missed a mortar; the message names it and the rules are applied then, before any map loads.
+- **B3a. Vanilla's PlaceWorker_NotUnderRoof checks the roof at the placed center cell.** The platform exception tests only that cell for rock, as CE's firing check does.
+  - Check: 1.2's roofed mortar placement items.
+  - If wrong: a large indirect-fire turret with rock over one edge cell is placed but can't fire (or the reverse).
+- **B3b. CE's TryStartShootSomething and GetInspectString contain their roof checks as plain calls to RoofGrid.Roofed(IntVec3) and GridsUtility.Roofed(IntVec3, Map).** The mod swaps those calls for its own (DESIGN 1.4).
+  - Check: no "No roof check found in CombatExtended.Building_TurretGunCE" warning at startup; 1.3a's roofed firing items.
+  - If wrong: the warning names the method; that check keeps CE's any-roof rule.
 - **B4. Vanilla labels a blueprint or frame as "label + suffix".** Generated platforms are relabelled by swapping that prefix.
   - Check: in another language, the 2×2 platform blueprint shows the translated name.
   - If wrong: blueprint and frame labels of generated platforms stay in English (cosmetic).

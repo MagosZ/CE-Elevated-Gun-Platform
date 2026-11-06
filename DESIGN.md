@@ -36,13 +36,14 @@ correct either way, and the assumption is listed in TESTING.md.
 A ThingDef is eligible when all hold:
 - `thingClass` is `CombatExtended.Building_TurretGunCE` or a subclass;
 - `building.turretGunDef != null`;
-- `designationCategory != null` or `minifiedDef != null` (the player can build or install it);
-- not indirect fire: no verb of the gun has a verbClass assignable to `CombatExtended.Verb_ShootMortarCE`, and no verb's
-  `defaultProjectile.projectile.flyOverhead` is true, and `building.IsMortar` is false.
-(Vanilla mortar and the CE rocketswarm launcher use Verb_ShootMortarCE and are excluded. The foam turret is not a CE
-turret class and is excluded.)
+- `designationCategory != null` or `minifiedDef != null` (the player can build or install it).
+Indirect-fire turrets are eligible too and get the mortar rules of 1.4. A gun is indirect fire when a verb has
+`isMortar`, a verbClass assignable to `CombatExtended.Verb_ShootMortarCE`, or a `defaultProjectile` with
+`projectile.flyOverhead`, or the gun has `CompChangeableProjectile` (vanilla mortar and the CE rocketswarm launcher are).
+`building.IsMortar` can't be asked before ResolveReferences; after it, a mortar the check missed gets the rules then.
+(The foam turret is not a CE turret class and is excluded.)
 At startup the log lists every turret def (thingClass `Building_Turret` or a subclass): the mountable ones, and the
-others grouped by reason (not a CE turret, no turret gun, can't be built or installed, indirect fire, no platform for
+others grouped by reason (not a CE turret, no turret gun, can't be built or installed, no platform for
 its size, elevated def name taken, generation failed).
 
 ### 1.2 Platform defs
@@ -94,7 +95,24 @@ graphics, buildingTags) with:
   have one), so it appears in storage filters;
 - label "elevated {B.label}"; description gets a platform note;
 - per-def caches reset; `index`/`shortHash` like a fresh def; `generated = true`; `modContentPack` = this mod.
-Registry: base <-> elevated maps, platform defs by size, fast `IsElevated(def)`, `IsPlatform(def)`.
+Registry: base <-> elevated maps, platform defs by size, fast `IsElevated(def)`, `IsPlatform(def)`, `IsElevatedMortar(def)`.
+
+Mortars (elevated defs of indirect-fire turrets, "elevated mortars"). The mortar sits on top of the roof its platform
+holds up:
+- walking: `passability` and `pathCost` are B's (a CE mortar: PassThroughOnly, 50); everything else is as above, so it
+  still holds up roofs, has fillPercent 1 (blocks light and sight; vanilla doors show a walkable building may), and is
+  airtight by material. Being walkable it doesn't split rooms. An empty platform stays impassable;
+- roofs: CE never fires an overhead weapon from a roofed cell (`Building_TurretGunCE.TryStartShootSomething`) and says
+  so (`GetInspectString`, the Attack button in `GetGizmos`). For every elevated turret only a rock roof
+  (`RoofRockThin`, `RoofRockThick`, as in 3.1) over its Position counts: a transpiler swaps the two methods'
+  `RoofGrid.Roofed(IntVec3)` / `GridsUtility.Roofed(IntVec3, Map)` calls for helpers that also get the turret, and a
+  GetGizmos postfix re-enables the Attack button CE disabled as roofed. Shells meet roofs only where they land
+  (`ProjectileCE.ImpactSomething`; `CheckForCollisionBetween` returns early for flyOverhead), so P2 changes nothing;
+- placement: vanilla's `PlaceWorker_NotUnderRoof` (every artillery building) is overridden for a turret footprint that
+  exactly fits a finished platform (2.1) when the center cell's roof isn't rock;
+- height: shells start from E's top (3.1), and E is targeted as any E;
+- no firing zone (3.8): no button and no outline;
+- hit point bonus and ammo capacity as for any E.
 
 ### 1.5 Frames of eligible turrets
 In the postfix: each eligible turret's `frameDef` gets `building.isEdifice = false` and
@@ -281,7 +299,7 @@ the air keep vanilla's result, as in 3.2.
   `CheckCellForCollision` prefix for rounds fired by E: if the cell is roofed, run `TryCollideWithRoof(cell)` first
   (CE's early-out otherwise skips roofs for rounds above the cover height); if it hits, the cell check ends there. Roof slabs as in 3.1.
 - P3: `CanCollideWith` postfix: rounds fired by E never collide with a pawn standing in a roofed cell.
-- P4: rounds aimed at E are plain CE. P5: mortars unchanged (never E).
+- P4: rounds aimed at E are plain CE. P5: mortar shells are plain CE rounds that start from E's top (1.4).
 - "Fired by E" is decided once at launch: launcher is E, or the pawn manning E (CE's operator: the turret's
   CompMannable.ManningPawn with a ManTurret job on it), recorded per round (re-derived on load). Fragments of E's shells
   (equipment == the projectile) are plain CE rounds. Instant (ray-cast) rounds are not covered by P2/P3, because CE's
@@ -344,7 +362,7 @@ attack on the order already under way (warmup, burst, cooldown) is finished firs
 Manned CIWS turrets keep CE's rule, as on the ground.
 
 ### 3.8 Firing zone (human-sized target)
-A `Command_Toggle` on the player's E ("Show firing zone against human-sized target", `CompGetGizmosExtra`;
+A `Command_Toggle` on the player's E (not an elevated mortar, 1.4) ("Show firing zone against human-sized target", `CompGetGizmosExtra`;
 `showFiringZone` on the comp, saved, off by default; selecting several E and clicking toggles each). While it is on
 and E is selected, `CompElevatedPlatform.PostDrawExtraSelectionOverlays` (reached through CE's range ring drawing,
 which calls ThingWithComps.DrawExtraSelectionOverlays) outlines with `GenDraw.DrawFieldEdges` the cells where E can

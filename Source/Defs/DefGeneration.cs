@@ -23,8 +23,8 @@ namespace ElevatedGunPlatform
         private const string PlatformLabelHighEnglish = "high turret platform ({0}\u00D7{1})";
         private const string PlatformLabelLowEnglish = "low turret platform ({0}\u00D7{1})";
         private const string PlatformGroupLabelEnglish = "turret platform ({0}\u00D7{1})";
-        private const string PlatformDescriptionHighEnglish = "A tall, solid platform for a {0}\u00D7{1} turret: floor 3 by default, set in the mod settings (each floor is a wall's height). Build or install a Combat Extended turret of exactly this size on it to make an elevated gun emplacement that fires over nearby walls. Compared with the low platform it costs twice as much and takes twice as long to build, and it adds more hit points to the turret (+40% by default). Mortars and other indirect-fire turrets can't be mounted. Holds up roofs like a wall, and is airtight if its material is. The marked spot in front is where colonists stand to man or reload the turret.";
-        private const string PlatformDescriptionLowEnglish = "A low, solid platform for a {0}\u00D7{1} turret: floor 1 by default, a wall's height, set in the mod settings. Build or install a Combat Extended turret of exactly this size on it to make an elevated gun emplacement that fires over nearby walls. It costs half as much as the high platform and is quicker to build, and it adds fewer hit points to the turret (+20% by default). Mortars and other indirect-fire turrets can't be mounted. Holds up roofs like a wall, and is airtight if its material is. The marked spot in front is where colonists stand to man or reload the turret.";
+        private const string PlatformDescriptionHighEnglish = "A tall, solid platform for a {0}\u00D7{1} turret: floor 3 by default, set in the mod settings (each floor is a wall's height). Build or install a Combat Extended turret of exactly this size on it to make an elevated gun emplacement that fires over nearby walls. Compared with the low platform it costs twice as much and takes twice as long to build, and it adds more hit points to the turret (+40% by default). Mortars and other indirect-fire turrets can be mounted too: they fire from on top of the roof the platform holds up (only a rock roof stops them), and colonists walk through them as through the mortar itself. Holds up roofs like a wall, and is airtight if its material is. The marked spot in front is where colonists stand to man or reload the turret.";
+        private const string PlatformDescriptionLowEnglish = "A low, solid platform for a {0}\u00D7{1} turret: floor 1 by default, a wall's height, set in the mod settings. Build or install a Combat Extended turret of exactly this size on it to make an elevated gun emplacement that fires over nearby walls. It costs half as much as the high platform and is quicker to build, and it adds fewer hit points to the turret (+20% by default). Mortars and other indirect-fire turrets can be mounted too: they fire from on top of the roof the platform holds up (only a rock roof stops them), and colonists walk through them as through the mortar itself. Holds up roofs like a wall, and is airtight if its material is. The marked spot in front is where colonists stand to man or reload the turret.";
         private const string ElevatedLabelEnglish = "elevated {0}";
         private const string ElevatedDescriptionSuffixEnglish = "This turret stands on a turret platform. It fires from the platform's height (by default floor 1 on a low platform, floor 3 on a high one) plus its own height, so it shoots over walls near it. Walls near the target still give cover, a roof over the target hides it, and enemies can see and shoot it just as well. It can be ordered to attack a target even if nobody mans it (a spot on the ground too, if its gun can aim at the ground, such as flak); a manned one still needs its crew to fire. The platform adds hit points (more on a high platform), multiplies the ammo capacity (x2 by default) and makes the turret impassable. Packing up or deconstructing the turret gives the platform back.";
 
@@ -107,8 +107,8 @@ namespace ElevatedGunPlatform
             def?.thingClass != null && typeof(Building_Turret).IsAssignableFrom(def.thingClass)
             && (def.defName == null || !def.defName.StartsWith(EGP.ElevatedDefPrefix, StringComparison.Ordinal));
 
-        /// <summary>DESIGN 1.1: null for a buildable or installable CE turret that is not indirect fire, else why a
-        /// turret def can't be mounted (for the startup log).</summary>
+        /// <summary>DESIGN 1.1: null for a buildable or installable CE turret (indirect fire included, DESIGN 1.4),
+        /// else why a turret def can't be mounted (for the startup log).</summary>
         private static string IneligibleReason(ThingDef def)
         {
             if (!typeof(Building_TurretGunCE).IsAssignableFrom(def.thingClass))
@@ -124,9 +124,10 @@ namespace ElevatedGunPlatform
             {
                 return "can't be built or installed";
             }
-            return IsIndirectFire(gun) ? "indirect fire (mortar or artillery)" : null;
+            return null;
         }
 
+        /// <summary>DESIGN 1.4: mortars, the rocket swarm and other guns that fire over the top.</summary>
         private static bool IsIndirectFire(ThingDef gun)
         {
             List<VerbProperties> verbs = gun.Verbs;
@@ -159,6 +160,15 @@ namespace ElevatedGunPlatform
                 }
             }
             return false;
+        }
+
+        /// <summary>DESIGN 1.4: a mortar sits on top of the roof its platform holds up. Pawns pass it as they pass the
+        /// mounted turret (a CE mortar: pass through, path cost 50); everything else stays as for any elevated turret.</summary>
+        internal static void ApplyMortarRules(ThingDef elevated, ThingDef baseDef)
+        {
+            elevated.passability = baseDef.passability;
+            elevated.pathCost = baseDef.pathCost;
+            EGP.RegisterElevatedMortar(elevated);
         }
 
         private static bool VerbIsMortar(VerbProperties verb) =>
@@ -485,6 +495,10 @@ namespace ElevatedGunPlatform
             def.interactionCellOffset = baseDef.hasInteractionCell && !InteractionSpotInsideFootprint(baseDef)
                 ? baseDef.interactionCellOffset
                 : platform.interactionCellOffset;
+            if (IsIndirectFire(baseDef.building.turretGunDef))
+            {
+                ApplyMortarRules(def, baseDef);
+            }
 
             List<StuffCategoryDef> stuffCategories = wall?.stuffCategories ?? platform.stuffCategories;
             def.stuffCategories = stuffCategories != null ? new List<StuffCategoryDef>(stuffCategories) : null;
@@ -723,7 +737,7 @@ namespace ElevatedGunPlatform
                         "EGP_ElevatedDescriptionSuffix".Translate().Resolve());
                     Relabel(elevated, label, description, fresh);
                     WarnIfCompsDiffer(baseDef, elevated);
-                    WarnIfMortar(baseDef);
+                    ApplyMortarRulesIfMissed(baseDef, elevated);
                 }
             }
             catch (Exception e)
@@ -793,14 +807,16 @@ namespace ElevatedGunPlatform
             return fields;
         }
 
-        /// <summary>Generation could not ask building.IsMortar (defs were unresolved then); now it can.</summary>
-        private static void WarnIfMortar(ThingDef baseDef)
+        /// <summary>Generation could not ask building.IsMortar (defs were unresolved then); now it can. A mortar it
+        /// missed gets the mortar rules (DESIGN 1.4) now, before any map exists.</summary>
+        private static void ApplyMortarRulesIfMissed(ThingDef baseDef, ThingDef elevated)
         {
             try
             {
-                if (baseDef.building != null && baseDef.building.IsMortar)
+                if (!EGP.IsElevatedMortar(elevated) && baseDef.building != null && baseDef.building.IsMortar)
                 {
-                    Log.Warning(DefGeneration.LogPrefix + baseDef.defName + " is a mortar (building.IsMortar) but was made mountable on a platform.");
+                    DefGeneration.ApplyMortarRules(elevated, baseDef);
+                    Log.Message(DefGeneration.LogPrefix + baseDef.defName + " is a mortar (building.IsMortar); its elevated version follows the mortar rules.");
                 }
             }
             catch (Exception e)

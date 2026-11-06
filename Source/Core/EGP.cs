@@ -60,6 +60,17 @@ namespace ElevatedGunPlatform
 
         public static bool IsElevated(ThingDef def) => def != null && baseByElevated.ContainsKey(def);
         public static bool IsElevated(Thing thing) => thing != null && IsElevated(thing.def);
+
+        /// <summary>Thin rock roof or overhead mountain: the only roofs that keep CE's taller slab (DESIGN 3.1) and that
+        /// stop an elevated mortar (DESIGN 1.4).</summary>
+        public static bool IsRockRoof(RoofDef roof) => roof != null && (roof == RoofDefOf.RoofRockThin || roof == RoofDefOf.RoofRockThick);
+
+        private static readonly HashSet<ThingDef> elevatedMortars = new HashSet<ThingDef>();
+
+        /// <summary>DESIGN 1.4: the elevated def of an indirect-fire turret (mortar, rocket swarm and the like).</summary>
+        public static void RegisterElevatedMortar(ThingDef elevatedDef) => elevatedMortars.Add(elevatedDef);
+        public static bool IsElevatedMortar(ThingDef def) => def != null && elevatedMortars.Contains(def);
+        public static bool IsElevatedMortar(Thing thing) => thing != null && IsElevatedMortar(thing.def);
         /// <summary>An eligible base turret def (one that has an elevated version).</summary>
         public static bool IsEligibleBase(ThingDef def) => def != null && elevatedByBase.ContainsKey(def);
         public static bool IsPlatform(ThingDef def) => def != null && platformTiers.ContainsKey(def);

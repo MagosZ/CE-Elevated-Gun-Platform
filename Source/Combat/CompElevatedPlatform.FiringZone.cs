@@ -16,7 +16,7 @@ namespace ElevatedGunPlatform
             base.PostDrawExtraSelectionOverlays();
             // The player's only, like its button: a turret handed to another faction stops drawing it.
             if (showFiringZone && IsElevated && parent.Spawned && parent.Faction == Faction.OfPlayer
-                && parent is Building_TurretGunCE turret)
+                && !EGP.IsElevatedMortar(parent.def) && parent is Building_TurretGunCE turret)
             {
                 FiringZone.Draw(turret, ref firingZone);
             }

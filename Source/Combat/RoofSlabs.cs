@@ -41,7 +41,7 @@ namespace ElevatedGunPlatform
         /// setting is on.</summary>
         public static RoofDef SlabRoof(RoofDef roof)
         {
-            if (roof == null || roof == RoofDefOf.RoofRockThin || roof == RoofDefOf.RoofRockThick || !EGPSettings.PlainRoofsActive)
+            if (roof == null || EGP.IsRockRoof(roof) || !EGPSettings.PlainRoofsActive)
             {
                 return roof;
             }

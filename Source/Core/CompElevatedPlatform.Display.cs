@@ -103,14 +103,15 @@ namespace ElevatedGunPlatform
             Printer_Plane.PrintPlane(layer, center, new Vector2(size.x, size.z), mat);
         }
 
-        /// <summary>DESIGN 3.8: the toggle that shows the firing zone while this turret is selected (player's only).</summary>
+        /// <summary>DESIGN 3.8: the toggle that shows the firing zone while this turret is selected (player's only). A
+        /// mortar (DESIGN 1.4) needs no line of fire and gets none.</summary>
         public override IEnumerable<Gizmo> CompGetGizmosExtra()
         {
             foreach (Gizmo gizmo in base.CompGetGizmosExtra())
             {
                 yield return gizmo;
             }
-            if (!IsElevated || parent.Faction != Faction.OfPlayer)
+            if (!IsElevated || parent.Faction != Faction.OfPlayer || EGP.IsElevatedMortar(parent.def))
             {
                 yield break;
             }

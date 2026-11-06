@@ -250,6 +250,44 @@ namespace ElevatedGunPlatform
         }
     }
 
+    /// <summary>DESIGN 1.4: artillery may not be placed under a roof (vanilla's PlaceWorker_NotUnderRoof). A mortar placed
+    /// exactly on a finished platform sits on top of the roof, so only a rock roof over its cell refuses it, as when
+    /// it fires.</summary>
+    [HarmonyPatch]
+    public static class MountPatch_NotUnderRoof
+    {
+        // AllowsPlacing(BuildableDef checkingDef, IntVec3 loc, Rot4 rot, Map map, Thing thingToIgnore = null, Thing thing = null)
+        private static readonly MethodInfo Target = AccessTools.DeclaredMethod(typeof(PlaceWorker_NotUnderRoof),
+            nameof(PlaceWorker_NotUnderRoof.AllowsPlacing));
+
+        public static bool Prepare()
+        {
+            if (Target == null)
+            {
+                MountingUtility.WarnOnce("PlaceWorker_NotUnderRoof",
+                    "PlaceWorker_NotUnderRoof.AllowsPlacing not found; a mortar can't be placed on a roofed platform.");
+                return false;
+            }
+            return true;
+        }
+
+        public static MethodBase TargetMethod() => Target;
+
+        public static void Postfix(BuildableDef __0, IntVec3 __1, Rot4 __2, Map __3, Thing __4, ref AcceptanceReport __result)
+        {
+            if (__result.Accepted || __3 == null)
+            {
+                return;
+            }
+            ThingDef turret = MountingUtility.EligibleTurretOf(__0);
+            if (turret != null && !EGP.IsRockRoof(__3.roofGrid.RoofAt(__1))
+                && MountingUtility.CheckFootprint(turret, __1, __2, __3, __4) == MountingUtility.PlatformFit.Fits)
+            {
+                __result = AcceptanceReport.WasAccepted;
+            }
+        }
+    }
+
     /// <summary>DESIGN 2.1: a platform never blocks a matching eligible turret's blueprint, frame or install blueprint.</summary>
     [HarmonyPatch(typeof(GenConstruct), nameof(GenConstruct.BlocksConstruction), new[] { typeof(Thing), typeof(Thing) })]
     public static class MountPatch_BlocksConstruction
